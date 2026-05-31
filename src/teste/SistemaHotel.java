@@ -39,26 +39,51 @@ public class SistemaHotel {
                     default -> System.out.println("Opção inválida!");
                 }
             } else {
-                System.out.println("Bem-vindo(a), " + usuarioLogado.getNome() + "!");
-                System.out.println("1. Consultar Disponibilidade de Quartos por Data");
-                System.out.println("2. Realizar uma Reserva");
-                System.out.println("3. Minhas Reservas e Cancelamentos");
-                System.out.println("4. Fazer Logout");
-                System.out.println("0. Sair");
-                System.out.print("Escolha uma opção: ");
-                opcao = scanner.nextInt();
-                scanner.nextLine(); // Limpar buffer
+                System.out.println("Bem-vindo(a), " + usuarioLogado.getNome() + " (" + usuarioLogado.getTipo() + ")!");
+                
+                // --- MENU EXCLUSIVO PARA ADMIN ---
+                if (usuarioLogado.getTipo().equalsIgnoreCase("ADMIN")) {
+                    System.out.println("1. Consultar Disponibilidade de Quartos por Data");
+                    System.out.println("2. Cadastrar Novo Quarto");
+                    System.out.println("3. Fazer Logout");
+                    System.out.println("0. Sair");
+                    System.out.print("Escolha uma opção: ");
+                    opcao = scanner.nextInt();
+                    scanner.nextLine(); // Limpar buffer
 
-                switch (opcao) {
-                    case 1 -> consultarDisponibilidade();
-                    case 2 -> efetuarReserva();
-                    case 3 -> gerenciarReservas();
-                    case 4 -> {
-                        usuarioLogado = null;
-                        System.out.println("Logout realizado com sucesso.");
+                    switch (opcao) {
+                        case 1 -> consultarDisponibilidade();
+                        case 2 -> menuCadastrarQuarto();
+                        case 3 -> {
+                            usuarioLogado = null;
+                            System.out.println("Logout realizado com sucesso.");
+                        }
+                        case 0 -> System.out.println("Encerrando o sistema...");
+                        default -> System.out.println("Opção inválida!");
                     }
-                    case 0 -> System.out.println("Encerrando o sistema...");
-                    default -> System.out.println("Opção inválida!");
+                } 
+                // --- MENU EXCLUSIVO PARA HÓSPEDE ---
+                else {
+                    System.out.println("1. Consultar Disponibilidade de Quartos por Data");
+                    System.out.println("2. Realizar uma Reserva");
+                    System.out.println("3. Minhas Reservas e Cancelamentos");
+                    System.out.println("4. Fazer Logout");
+                    System.out.println("0. Sair");
+                    System.out.print("Escolha uma opção: ");
+                    opcao = scanner.nextInt();
+                    scanner.nextLine(); // Limpar buffer
+
+                    switch (opcao) {
+                        case 1 -> consultarDisponibilidade();
+                        case 2 -> efetuarReserva();
+                        case 3 -> gerenciarReservas();
+                        case 4 -> {
+                            usuarioLogado = null;
+                            System.out.println("Logout realizado com sucesso.");
+                        }
+                        case 0 -> System.out.println("Encerrando o sistema...");
+                        default -> System.out.println("Opção inválida!");
+                    }
                 }
             }
         } while (opcao != 0);
@@ -201,5 +226,23 @@ public class SistemaHotel {
                 System.out.println("Não foi possível cancelar. Verifique o ID ou se a reserva já foi cancelada.");
             }
         }
+    }
+    
+ // Menu de Administrador - Cadastrar Quarto
+
+    private static void menuCadastrarQuarto() {
+        System.out.println("\n--- [ADMIN] CADASTRAR NOVO QUARTO ---");
+        System.out.print("Número do Quarto: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine(); // Limpar buffer
+
+        System.out.print("Tipo do Quarto (ex: Solteiro, Casal, Suíte): ");
+        String tipoQuarto = scanner.nextLine();
+
+        System.out.print("Preço da Diária: R$ ");
+        double precoDiaria = scanner.nextDouble();
+        scanner.nextLine(); // Limpar buffer
+
+        hotelService.cadastrarNovoQuarto(usuarioLogado, numero, tipoQuarto, precoDiaria);
     }
 }

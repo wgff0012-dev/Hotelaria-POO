@@ -104,4 +104,24 @@ public class HotelService {
         }
         return false;
     }
+    
+ // Cadastro de Novo Quarto (Apenas para ADMIN)
+    public boolean cadastrarNovoQuarto(Usuario usuarioLogado, int numero, String tipo, double precoDiaria) {
+        // 1. Validação de Segurança: Verifica se o usuário está logado e é ADMIN
+        if (usuarioLogado == null || !usuarioLogado.getTipo().equalsIgnoreCase("ADMIN")) {
+            System.out.println("[ERRO] Acesso negado. Apenas administradores podem cadastrar quartos.");
+            return false;
+        }
+
+        // 2. Validação de Regra de Negócio: Evita duplicar quartos com o mesmo número
+        if (buscarQuarto(numero) != null) {
+            System.out.println("[ERRO] Já existe um quarto cadastrado com o número " + numero + ".");
+            return false;
+        }
+
+        // 3. Se passou nas validações, adiciona o quarto
+        quartos.add(new Quarto(numero, tipo, precoDiaria));
+        System.out.println("[SUCESSO] Quarto " + numero + " (" + tipo + ") cadastrado com sucesso!");
+        return true;
+    }
 }
