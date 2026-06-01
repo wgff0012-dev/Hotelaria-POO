@@ -2,6 +2,7 @@ package modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate; 
 
 public class HotelService {
     List<Usuario> usuarios = new ArrayList<>();
@@ -44,16 +45,19 @@ public class HotelService {
         return null;
     }
 
-    public boolean realizarReserva(Usuario usuario, Quarto quarto) {
-        // 1. TESTE DE OCUPAÇÃO (Olha se o quarto já está reservado)
+ // Altere apenas a assinatura do método realizarReserva dentro de HotelService:
+    public boolean realizarReserva(Usuario usuario, Quarto quarto, LocalDate dataEntrada, LocalDate dataSaida) {
         for (Reserva r : reservas) {
             if (r.getQuarto().getNumero() == quarto.getNumero() && r.getStatus().equals("ATIVA")) {
                 System.out.println("[ERRO] Esse quarto já está ocupado!");
                 return false; 
             }
         }
-        Reserva novaReserva = new Reserva(proximoIdReserva++, usuario, quarto);
+
+        Reserva novaReserva = new Reserva(proximoIdReserva++, usuario, quarto, dataEntrada, dataSaida);
         reservas.add(novaReserva);
+        
+        System.out.println("\n[NOTIFICAÇÃO] Reserva #" + novaReserva.getId() + " feita com sucesso!");
         return true;
     }
 

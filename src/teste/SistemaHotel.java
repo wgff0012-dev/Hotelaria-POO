@@ -2,6 +2,8 @@ package teste;
 
 import java.util.List;
 import java.util.Scanner;
+import java.time.LocalDate; 
+import java.time.format.DateTimeFormatter; // Adicionado para formatar as datas
 import modelo.HotelService;
 import modelo.Quarto;
 import modelo.Reserva;
@@ -11,6 +13,9 @@ public class SistemaHotel {
     static HotelService hotelService = new HotelService(); 
     static Usuario usuarioLogado = null; 
     static Scanner teclado = new Scanner(System.in);
+    
+    // Criamos um formatador padrão brasileiro (dd/MM/yyyy) para a classe toda usar
+    static DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static void main(String[] args) {
         int opcao;
@@ -105,17 +110,24 @@ public class SistemaHotel {
     private static void efetuarReserva() {
         System.out.println("\n--- REALIZAR RESERVA ---");
         System.out.print("Número do quarto desejado: ");
-        int numeroQuarto = teclado.nextInt(); teclado.nextLine();
+        int numeroQuarto = teclado.nextInt(); 
+        teclado.nextLine();
         
         Quarto quarto = hotelService.buscarQuarto(numeroQuarto);
         if (quarto == null) {
             System.out.println("Quarto não existe.");
             return;
         }
+            System.out.print("Data de Chegada (dd/mm/aaaa): ");
+            String textoEntrada = teclado.nextLine();
+            LocalDate dataEntrada = LocalDate.parse(textoEntrada, formatador);
 
-        if (hotelService.realizarReserva(usuarioLogado, quarto)) {
+            System.out.print("Data de Saída (dd/mm/aaaa): ");
+            String textoSaida = teclado.nextLine();
+            LocalDate dataSaida = LocalDate.parse(textoSaida, formatador); 
+            
+            hotelService.realizarReserva(usuarioLogado, quarto, dataEntrada, dataSaida);
             System.out.println("Sucesso! Sua reserva foi confirmada.");
-        }
     }
     
     private static void gerenciarReservas() {
@@ -128,7 +140,14 @@ public class SistemaHotel {
         }
 
         for (Reserva r : minhas) {
-            System.out.println("ID: " + r.getId() + " | Quarto: " + r.getQuarto().getNumero() + " | Status: " + r.getStatus());
+            // Ajustado para formatar e mostrar o período bonitinho na listagem (dd/MM/yyyy)
+            String entradaFormatada = r.getDataEntrada().format(formatador);
+            String saidaFormatada = r.getDataSaida().format(formatador);
+            
+            System.out.println(" | ID: " + r.getId() + 
+            				   " | Quarto: " + r.getQuarto().getNumero() + 
+                               " | Período: " + entradaFormatada + " até " + saidaFormatada + 
+                               " | Status: " + r.getStatus());
         }
 
         System.out.print("\nDeseja cancelar alguma reserva? (S/N): ");
@@ -149,11 +168,14 @@ public class SistemaHotel {
     private static void menuCadastrarQuarto() {
         System.out.println("\n--- CADASTRAR QUARTO ---");
         System.out.print("Número do Quarto: ");
-        int numero = teclado.nextInt(); teclado.nextLine();
+        int numero = teclado.nextInt(); 
+        teclado.nextLine();
         System.out.println("Tipos permitidos: [Solteiro], [Casal] ou [Suíte]");
+        System.out.print("Digite o tipo: ");
         String tipo = teclado.nextLine();
         System.out.print("Preço da Diária: R$ ");
-        double preco = teclado.nextDouble(); teclado.nextLine();
+        double preco = teclado.nextDouble();
+        teclado.nextLine();
 
         if (hotelService.cadastrarNovoQuarto(usuarioLogado, numero, tipo, preco)) {
             System.out.println("Quarto cadastrado com sucesso!");
