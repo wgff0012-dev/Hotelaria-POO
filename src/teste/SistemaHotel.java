@@ -100,9 +100,17 @@ public class SistemaHotel {
     }
     
     private static void consultarDisponibilidade() {
-        System.out.println("\n--- QUARTOS CADASTRADOS ---");
-        List<Quarto> todos = hotelService.listarTodosOsQuartos();
-        for (Quarto q : todos) {
+        // Mudamos o título para deixar claro o que está aparecendo
+        System.out.println("\n--- QUARTOS DISPONÍVEIS ---");
+        
+        List<Quarto> disponiveis = hotelService.listarQuartosDisponiveis();
+        
+        if (disponiveis.isEmpty()) {
+            System.out.println("Desculpe, todos os quartos estão ocupados no momento!");
+            return;
+        }
+
+        for (Quarto q : disponiveis) {
             System.out.println("Quarto " + q.getNumero() + " | " + q.getTipo() + " | R$ " + q.getPrecoPorNoite());
         }
     }

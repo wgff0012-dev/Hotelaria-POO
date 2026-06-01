@@ -34,8 +34,26 @@ public class HotelService {
         return null;
     }
 
-    public List<Quarto> listarTodosOsQuartos() {
-        return quartos;
+    public List<Quarto> listarQuartosDisponiveis() {
+        List<Quarto> disponiveis = new ArrayList<>();
+
+        for (Quarto q : quartos) {
+            boolean estaReservado = false;
+
+            // Varre a lista de reservas para ver se este quarto específico está ocupado
+            for (Reserva r : reservas) {
+                if (r.getQuarto().getNumero() == q.getNumero() && r.getStatus().equals("ATIVA")) {
+                    estaReservado = true; // Achou uma reserva ativa para ele
+                    break;
+                }
+            }
+
+            // Se ninguém reservou o quarto, ele entra na lista de disponíveis
+            if (!estaReservado) {
+                disponiveis.add(q);
+            }
+        }
+        return disponiveis;
     }
 
     public Quarto buscarQuarto(int numero) {
