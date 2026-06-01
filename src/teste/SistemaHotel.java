@@ -8,9 +8,9 @@ import modelo.Reserva;
 import modelo.Usuario;
 
 public class SistemaHotel {
-    private static HotelService hotelService = new HotelService(); 
-    private static Usuario usuarioLogado = null; 
-    private static Scanner teclado = new Scanner(System.in);
+    static HotelService hotelService = new HotelService(); 
+    static Usuario usuarioLogado = null; 
+    static Scanner teclado = new Scanner(System.in);
 
     public static void main(String[] args) {
         int opcao;

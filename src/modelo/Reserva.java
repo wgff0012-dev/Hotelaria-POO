@@ -1,10 +1,10 @@
 package modelo;
 
 public class Reserva {
-    private int id;
-    private Usuario hospede;
-    private Quarto quarto;
-    private String status; // "ATIVA", "CANCELADA"
+     int id;
+     Usuario hospede;
+     Quarto quarto;
+     String status; // "ATIVA", "CANCELADA"
 
     public Reserva(int id, Usuario hospede, Quarto quarto) {
         this.id = id;

@@ -1,9 +1,9 @@
 package modelo;
 
 public class Quarto {
-    private int numero;
-    private String tipo;
-    private double precoPorNoite;
+     int numero;
+     String tipo; // [Solteiro], [Casal] ou [Suíte]
+     double precoPorNoite;
 
     public Quarto(int numero, String tipo, double precoPorNoite) {
         this.numero = numero;
