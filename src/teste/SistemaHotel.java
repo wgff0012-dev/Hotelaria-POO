@@ -13,8 +13,6 @@ public class SistemaHotel {
     static HotelService hotelService = new HotelService(); 
     static Usuario usuarioLogado = null; 
     static Scanner teclado = new Scanner(System.in);
-    
-    // Criamos um formatador padrão brasileiro (dd/MM/yyyy) para a classe toda usar
     static DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static void main(String[] args) {
@@ -133,9 +131,12 @@ public class SistemaHotel {
             System.out.print("Data de Saída (dd/mm/aaaa): ");
             String textoSaida = teclado.nextLine();
             LocalDate dataSaida = LocalDate.parse(textoSaida, formatador); 
-            
+        if (dataEntrada.isBefore(dataSaida)) {
             hotelService.realizarReserva(usuarioLogado, quarto, dataEntrada, dataSaida);
             System.out.println("Sucesso! Sua reserva foi confirmada.");
+        } else {
+        	System.out.println("Erro! Sua reserva não foi realizada, data invalida.");
+        }
     }
     
     private static void gerenciarReservas() {
